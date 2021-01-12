@@ -19,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.solr.client.solrj.SolrServer;
+import org.openmrs.Allergies;
+import org.openmrs.Allergy;
 import org.openmrs.Encounter;
 import org.openmrs.Form;
 import org.openmrs.Location;
@@ -27,11 +29,9 @@ import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
+import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.Allergies;
-import org.openmrs.Allergy;
-import org.openmrs.api.PatientService;
 import org.openmrs.module.appointmentscheduling.Appointment;
 import org.openmrs.module.appointmentscheduling.api.AppointmentService;
 import org.openmrs.module.chartsearch.GeneratingJson;
@@ -312,7 +312,7 @@ public class ChartSearchServiceImpl extends BaseOpenmrsService implements ChartS
 				jsonGrp.put("group_name", obsGrp.getConcept().getDisplayString());
 				
 				Date obsDate = obsGrp.getObsDatetime() == null ? new Date() : obsGrp.getObsDatetime();
-				SimpleDateFormat formatDateJava = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				String obsDateStr = obsDate.getTime() + "";
 				
 				jsonGrp.put("last_taken_date", obsDateStr);
@@ -477,7 +477,8 @@ public class ChartSearchServiceImpl extends BaseOpenmrsService implements ChartS
 	
 	@Override
 	public String[] getAllProvidersFromTheDB() {
-		List<Provider> providerList = Context.getProviderService().getAllProviders();
+		String enterpriseGuidString = Context.getLocationService().getEnterpriseForLoggedinUser();
+		List<Provider> providerList = Context.getProviderService().getAllProvidersForEnterprise(false, enterpriseGuidString);
 		String[] providers = new String[providerList.size()];
 		
 		for (int i = 0; i < providerList.size(); i++) {
@@ -493,7 +494,7 @@ public class ChartSearchServiceImpl extends BaseOpenmrsService implements ChartS
 	
 	@Override
 	public String[] getAllLocationsFromTheDB() {
-		List<Location> locationList = Context.getLocationService().getAllLocations();
+		List<Location> locationList = Context.getLocationService().getAllLocationsForEnterpriseId();
 		String[] locations = new String[locationList.size()];
 		
 		for (int i = 0; i < locationList.size(); i++) {
