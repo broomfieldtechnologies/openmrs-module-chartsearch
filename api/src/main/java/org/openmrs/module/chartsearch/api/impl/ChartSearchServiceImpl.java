@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.chartsearch.api.impl;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -312,7 +311,7 @@ public class ChartSearchServiceImpl extends BaseOpenmrsService implements ChartS
 				jsonGrp.put("group_name", obsGrp.getConcept().getDisplayString());
 				
 				Date obsDate = obsGrp.getObsDatetime() == null ? new Date() : obsGrp.getObsDatetime();
-				new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+				//				new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 				String obsDateStr = obsDate.getTime() + "";
 				
 				jsonGrp.put("last_taken_date", obsDateStr);
